@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload & Download</title>
+</head>
+<body>
+    <h1>Upload and Download Files</h1>
+    
+    <!-- Form for uploading a file -->
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Uploaded Files</h2>
+    <ul id="file-list">
+        <!-- This list will be populated dynamically with uploaded files -->
+    </ul>
+
+    <script>
+        // Fetch the list of uploaded files from the server
+        fetch('/files')
+            .then(response => response.json())
+            .then(files => {
+                const fileList = document.getElementById('file-list');
+                files.forEach(file => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <a href="/uploads/${file}" download>${file}</a> 
+                    `;
+                    fileList.appendChild(li);
+                });
+            });
+
+        // Download file functionality
+        function downloadFile(fileName) {
+            const link = document.createElement('a');
+            link.href = `/download/${fileName}`;
+            link.click();
+        }
+    </script>
+</body>
+</html>
